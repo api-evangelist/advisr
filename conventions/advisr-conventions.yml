@@ -1,0 +1,162 @@
+generated: '2026-09-09'
+method: searched
+source: >-
+  https://apidocs.advisr.com/ — cross-cutting request/response semantics read
+  from the public Advisr API reference (Introduction, Authentication, the list
+  endpoints' query-parameter tables, Export, Custom Fields and Errors sections).
+description: >-
+  How the Advisr REST API behaves across every operation: authentication style,
+  idempotency, pagination, versioning, error envelope, rate-limit signaling,
+  asynchronous exports and reversibility of writes. These are the
+  runtime-semantics conventions an agent needs and that no OpenAPI is published
+  to express — Advisr publishes no machine-readable contract.
+base_url: https://api.advisr.com/v1
+api_style: REST over HTTPS, JSON responses, JSON request bodies on the POST surface
+
+authentication:
+  scheme: Custom `token` request header carrying a company-scoped API key
+  key_types: [company access token]
+  self_service: false
+  docs: https://apidocs.advisr.com/#authentication
+  detail: authentication/advisr-authentication.yml
+
+idempotency:
+  supported: false
+  coverage: none
+  mechanism: null
+  applies_to: null
+  docs: null
+  note: >-
+    Advisr documents no idempotency key, no request de-duplication window and no
+    replay semantics. The mutating surface is four POST operations
+    (custom-fields update / delete / delete-all, and the three export request
+    endpoints); a retried export request creates another export job, and a
+    retried custom-fields update fully replaces the supplied key values, so a
+    replay is a re-execution rather than a no-op. GET operations are inherently
+    idempotent.
+
+reversibility:
+  grade: none
+  applies: true
+  note: >-
+    Advisr documents no reversal, undo, restore or cancel operation for any
+    write, and no window inside which one would work. This is recorded as an
+    honest absence — no window is asserted because the docs state none.
+  write_surface:
+    - operation: POST /v1/custom-fields/:objectType/:objectId/update
+      effect: >-
+        "All categoryKey/key combinations that are supplied in the post will be
+        fully replaced" — a destructive replace of the supplied keys.
+      reversal: none documented
+      window: none documented
+      mitigation: >-
+        The response returns the object's full customFields after the write, so a
+        caller can snapshot the prior state with GET
+        /v1/custom-fields/:objectType/:id first and re-POST it to restore.
+        This is a caller-side workaround, not a provider-published reversal.
+    - operation: POST /v1/custom-fields/:objectType/:objectId/delete
+      effect: Deletes the supplied categoryKey/key combinations.
+      reversal: none documented
+      window: none documented
+    - operation: POST /v1/custom-fields/:objectType/:objectId/delete-all
+      effect: Deletes every custom field on the object.
+      reversal: none documented
+      window: none documented
+    - operation: POST /v1/export/request/{client|campaign|campaign-products}
+      effect: Enqueues an asynchronous export job.
+      reversal: none documented — no cancel endpoint is published
+      window: none documented
+  docs: https://apidocs.advisr.com/#custom-fields
+
+dry_run_mode:
+  supported: false
+  note: No preview, validate-only or dry-run parameter is documented on any operation.
+
+pagination:
+  style: page-number (offset)
+  request_params:
+    limit: How many records to return. Default 10 on the documented list endpoints.
+    page: What page of the results to return. Default 1.
+    sort: The column to sort results by (default varies by resource, commonly `name`).
+    sortDesc: Boolean, default false.
+    search: Free-text filter on the documented list endpoints.
+  response_fields:
+    page: integer — the page returned
+    hasMore: boolean — whether further pages exist
+    results: array — the records
+  max_limit: not documented
+  cursor: not supported
+  docs: https://apidocs.advisr.com/#list-groups
+
+filtering_and_expansion:
+  field_expansion: not supported
+  sparse_fieldsets: not supported
+  note: >-
+    Related objects are returned pre-expanded or as ids depending on the
+    endpoint; there is no `expand`/`fields` parameter. Some resources are
+    split into companion detail endpoints instead (e.g. GET /v1/user/:id vs
+    GET /v1/user/:id/detail, GET /v1/campaign/:id/product-summary vs
+    /product-detail).
+
+metadata:
+  supported: true
+  mechanism: >-
+    First-class `customFields` on product, client, campaign, industryCategory,
+    company, group and userCompanyGroup objects, addressed by
+    (categoryKey, key) and typed (text, multiselect, array, int, datetime,
+    boolean) with optional `valueOptions`.
+  read: GET /v1/custom-fields/:objectType/:id
+  write: POST /v1/custom-fields/:objectType/:objectId/update
+  docs: https://apidocs.advisr.com/#custom-fields
+
+request_tracing:
+  request_id: not documented
+  note: No request id, trace header or correlation identifier is documented on responses or errors.
+
+versioning:
+  style: URI path
+  current: v1
+  header_versioning: not supported
+  version_pinning: not supported
+  note: >-
+    Every documented endpoint is under /v1. There is no version request header,
+    no dated version pin, and no published policy for how a v2 would be
+    introduced.
+  changelog: changelog/advisr-changelog.yml
+
+error_envelope:
+  shape: '{"error": {"type": "<AdvisrErrorType>", "messages": ["..."]}}'
+  rfc9457: false
+  detail: errors/advisr-error-codes.yml
+
+rate_limit_signaling:
+  documented_headers: none
+  exhaustion_status: 429
+  exhaustion_type: AdvisrRateLimitError
+  retry_after: not documented
+  note: >-
+    Advisr documents that a rate limit exists and that exceeding it returns 429
+    AdvisrRateLimitError, but publishes no limit value, no window, and no
+    X-RateLimit-* / RateLimit-* / Retry-After response headers, so a client
+    cannot pace itself before being refused.
+  detail: rate-limits/advisr-rate-limits.yml
+
+asynchronous_operations:
+  pattern: request-then-poll
+  request: POST /v1/export/request/{client|campaign|campaign-products}
+  poll: GET /v1/export/status/:exportId
+  callback: none — no webhook or callback is offered for completion
+  docs: https://apidocs.advisr.com/#export
+
+webhooks:
+  supported: false
+  note: >-
+    No webhook, event stream or subscription surface is documented. Campaign
+    support-submission and fulfillment-submission state is read by polling
+    GET /v1/campaign/:id/support-submissions and
+    GET /v1/campaign/:id/fulfillment-submissions.
+
+content_negotiation:
+  request: application/json on POST bodies
+  response: application/json for all endpoints; binary/document formats on
+    GET /v1/campaign/:id/presentation/:format and GET /v1/file/:id

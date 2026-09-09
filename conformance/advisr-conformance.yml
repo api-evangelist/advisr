@@ -1,0 +1,112 @@
+generated: '2026-09-09'
+method: derived
+source: >-
+  Derived from the public Advisr API reference (https://apidocs.advisr.com/) and
+  direct probes of the advisr.com hosts on 2026-09-09. No OpenAPI, AsyncAPI,
+  GraphQL SDL or JSON Schema is published, so every assertion below is read from
+  the human reference and from observed responses.
+description: >-
+  Cross-cutting and industry-standard conformance assertions for the Advisr API.
+  Advisr makes no published conformance or compliance claim of any kind — there
+  is no trust center, no certification page, and no standards statement in the
+  reference — so every entry here is a derived observation with the evidence URL
+  that supports it. Absences are recorded as `conforms: false`, not omitted.
+conformance:
+  - id: openapi
+    conforms: false
+    evidence: >-
+      No OpenAPI/Swagger document is served. Probed /openapi.json,
+      /openapi.yaml, /swagger.json, /v1/openapi.json, /v1/swagger.json,
+      /api-docs, /v1/api-docs, /swagger/v1/swagger.json, /docs, /redoc,
+      /rapidoc and /.well-known/openapi.json on api.advisr.com (all 404 JSON),
+      apidocs.advisr.com (all 404 HTML) and www.advisr.com (all 404 HTML);
+      app.advisr.com answers 200 with an SPA shell for every path.
+  - id: graphql
+    conforms: false
+    evidence: >-
+      POST https://api.advisr.com/graphql and /v1/graphql both return HTTP 404
+      {"error":true,"message":"Not Found"}. No GraphQL surface.
+  - id: mcp
+    conforms: false
+    evidence: >-
+      POST tools/list to https://api.advisr.com/mcp and /v1/mcp returns HTTP
+      404; mcp.advisr.com does not resolve in DNS. No MCP server.
+  - id: a2a
+    conforms: false
+    evidence: >-
+      /.well-known/agent-card.json and /.well-known/agent.json return 404 on
+      api.advisr.com, advisr.com, www.advisr.com and apidocs.advisr.com. See
+      well-known/advisr-well-known.yml.
+  - id: oauth2
+    conforms: false
+    evidence: >-
+      Authentication is a single company-scoped API key in a `token` header.
+      https://apidocs.advisr.com/#authentication documents no OAuth 2.0 flow,
+      and /.well-known/oauth-authorization-server returns 404 on every host.
+  - id: oidc
+    conforms: false
+    evidence: /.well-known/openid-configuration returns 404 on every advisr.com host.
+  - id: rfc9457
+    conforms: false
+    evidence: >-
+      Errors are returned as {"error":{"type":...,"messages":[...]}} with
+      Content-Type application/json, not application/problem+json. See
+      https://apidocs.advisr.com/#errors and errors/advisr-error-codes.yml.
+  - id: pagination
+    conforms: true
+    style: page-number
+    evidence: >-
+      Every documented list endpoint accepts limit/page/sort/sortDesc/search and
+      returns {page, hasMore, results} — a consistent, documented pagination
+      contract applied uniformly across resources.
+      https://apidocs.advisr.com/#list-groups
+  - id: idempotency
+    conforms: false
+    evidence: >-
+      No idempotency key, de-duplication window or replay semantics is
+      documented for any of the seven POST operations.
+      See conventions/advisr-conventions.yml (idempotency.coverage: none).
+  - id: rate-limit-headers
+    conforms: false
+    evidence: >-
+      429 AdvisrRateLimitError is documented but no RateLimit-*/X-RateLimit-*/
+      Retry-After header is. https://apidocs.advisr.com/#errors
+  - id: rfc8594-sunset
+    conforms: false
+    evidence: >-
+      Field deprecations are announced in changelog prose only; no Sunset or
+      Deprecation response header and no removal date is published.
+      https://apidocs.advisr.com/#changelog
+  - id: webhooks
+    conforms: false
+    evidence: >-
+      No webhook, callback or event subscription surface is documented.
+      Asynchronous exports and campaign submissions are polled.
+  - id: https-tls
+    conforms: true
+    evidence: >-
+      All documented endpoints and every advisr.com host answer over HTTPS;
+      http:// is upgraded. See security/advisr-domain-security.yml.
+domain_standards:
+  sector: advertising / media sales enablement
+  declared: []
+  note: >-
+    REWARD-ONLY, AND NOT EARNED HERE. Advisr's market has candidate standards —
+    OpenRTB and AdCOM (IAB Tech Lab) for programmatic transaction, VAST/VMAP for
+    creative delivery, and the IAB/AAAA agency-transaction message set — but the
+    Advisr contract declares none of them. The API's vocabulary is Advisr's own
+    (campaign, product, sub-product, goal, industryCategory, customField), no
+    request or response carries a standard schema URN, media type or message
+    type, and neither the reference nor advisr.com claims conformance to any
+    ad-industry specification. Advisr sits on the sell-side planning and
+    proposal side rather than the programmatic bidstream, so the absence is
+    plausible rather than negligent; it is recorded here as measured, not as a
+    penalty.
+compliance:
+  certifications: []
+  trust_center: null
+  note: >-
+    No SOC 2, ISO 27001, PCI, HIPAA or FedRAMP claim is published anywhere on
+    advisr.com. trust.advisr.com does not resolve; https://www.advisr.com/security
+    returns 404. A privacy policy and a cookie policy are published; no security
+    or compliance page is. No `Compliance` or `TrustCenter` pointer is emitted.

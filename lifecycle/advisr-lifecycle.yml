@@ -1,0 +1,86 @@
+generated: '2026-09-09'
+method: searched
+source: >-
+  https://apidocs.advisr.com/ (versioning, changelog, deprecations) plus probes
+  of the usual status/SLA/trust hosts on 2026-09-09.
+description: >-
+  Versioning, deprecation, status and SLA posture for the Advisr API, read from
+  the public reference and from direct probes. Advisr publishes a dated
+  changelog and named field deprecations, but no deprecation POLICY, no status
+  page, no SLA, and no Sunset/Deprecation response headers.
+versioning:
+  style: uri-path
+  current: v1
+  base: https://api.advisr.com/v1
+  policy_published: false
+  note: >-
+    No published policy for how a breaking change or a v2 would be introduced,
+    how long v1 would be supported, or how consumers would be notified.
+deprecation:
+  policy_published: false
+  rfc8594_headers: false
+  sunset_header: not observed
+  deprecation_header: not observed
+  note: >-
+    Advisr announces deprecations in the changelog prose only. No deprecation
+    policy document, no support window, no sunset date, and no RFC 8594
+    Sunset/Deprecation response headers are published.
+  deprecated_items:
+    - item: client.agencyName
+      announced: '2026-06-30'
+      replacement: the client object's `agencies` array
+      removal_date: not stated
+      source: https://apidocs.advisr.com/#changelog
+    - item: client.agencyContact
+      announced: '2026-06-30'
+      replacement: the client object's `agencies` array
+      removal_date: not stated
+      source: https://apidocs.advisr.com/#changelog
+    - item: client.hasAgency
+      announced: '2026-06-30'
+      replacement: the client object's `agencies` array
+      removal_date: not stated
+      source: https://apidocs.advisr.com/#load-client
+      note: >-
+        Marked "Deprecated — use agencies (read-only; set via agencyIds)
+        instead" in the client object property table.
+    - item: campaign.proposalLink
+      announced: not dated
+      replacement: campaign.presentationLink
+      removal_date: not stated
+      source: https://apidocs.advisr.com/#load-campaign
+      note: >-
+        Marked "Deprecated" in the campaign object property table with no
+        changelog entry and no announcement date — a deprecation an integrator
+        can only find by reading the field table.
+status_page:
+  published: false
+  probes:
+    - url: https://status.advisr.com/
+      status: 0
+      note: >-
+        TLS handshake fails — no certificate on that host matches
+        status.advisr.com, so no status page is served there.
+    - url: https://advisr.statuspage.io/
+      status: 200
+      note: >-
+        Redirects to https://www.atlassian.com/software/statuspage — the
+        Statuspage marketing site, not an Advisr status page. Not a status page.
+  incident_history: not published
+sla:
+  published: false
+  note: >-
+    No uptime commitment, support-response target or SLA document is published
+    on advisr.com or in the API reference. The terms of service at
+    https://www.advisr.com/terms-of-service govern the website; commercial
+    terms are handled through the sales relationship.
+support:
+  channel: https://support.advisr.com/hc/en-us
+  note: >-
+    Zendesk help center, fronted by a Cloudflare bot challenge to automated
+    clients (HTTP 403 "Just a moment..." on 2026-09-09) but linked from the
+    advisr.com primary navigation and demonstrably live for a browser.
+  api_access: >-
+    "Please reach out to your account manager to inquire about access." API
+    tokens are issued by an Advisr support representative.
+changelog: changelog/advisr-changelog.yml

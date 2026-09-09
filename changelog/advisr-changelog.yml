@@ -1,0 +1,83 @@
+generated: '2026-09-09'
+method: searched
+source: https://apidocs.advisr.com/#changelog
+description: >-
+  Advisr's published API changelog, transcribed from the "Changelog" section of
+  the public API reference at apidocs.advisr.com. Advisr publishes dated release
+  summaries in the reference itself rather than on a separate changelog page or
+  feed; there is no RSS/Atom feed, no per-release version number, and no
+  machine-readable release history.
+scheme: dated-entries
+versioning: URI path — every documented endpoint is under /v1
+current_version: v1
+feed: null
+entries:
+  - date: '2026-06-30'
+    breaking: false
+    additions:
+      - >-
+        Agency endpoints added — list agencies for your company (GET
+        /v1/agency/list) and load an individual agency by id (GET
+        /v1/agency/:id).
+      - >-
+        Loading a client now returns the agencies linked to it in a new
+        `agencies` array.
+    deprecations:
+      - >-
+        The legacy `agencyName` and `agencyContact` fields on the client object
+        are deprecated in favor of linked agencies. No removal date is stated.
+  - date: '2026-06-07'
+    breaking: false
+    additions:
+      - >-
+        List-products-with-sub-products endpoint added (GET
+        /v1/products-with-subproducts) — same data as list products, with each
+        product additionally including its sub-products. The existing list
+        products endpoint is unchanged.
+      - >-
+        The campaign products export supports a new `ownerIsAdvisrEmployee`
+        column, indicating whether the campaign owner is an Advisr employee.
+  - date: '2023-07-10'
+    breaking: false
+    additions:
+      - >-
+        File retrieval endpoints added — load the files uploaded to a campaign
+        (GET /v1/campaign/:id/files) and load an individual file (GET
+        /v1/file/:id).
+  - date: '2023-04-26'
+    breaking: false
+    additions:
+      - >-
+        Budget recommendation values are returned by the new load-campaign
+        product-recommendation endpoint when they exist.
+  - date: '2023-04-04'
+    breaking: false
+    additions:
+      - >-
+        Street address, agency and full name added to campaigns, clients and
+        users where values exist; client team members are now returned.
+  - date: '2023-02-24'
+    breaking: false
+    additions:
+      - >-
+        Country, team members and a test-campaign true/false flag added to the
+        campaign object where values exist.
+  - date: '2022-12-05'
+    breaking: false
+    additions:
+      - >-
+        Goals endpoints introduced — list goals for a client, a new list goals
+        endpoint, and list goals for an industry category.
+  - date: '2022-10-13'
+    breaking: false
+    additions:
+      - >-
+        External lookup IDs returned by the load campaign and load client
+        endpoints when values have been added.
+observations:
+  - >-
+    Eight dated entries spanning 2022-10-13 to 2026-06-30, with a ~35-month gap
+    between 2023-07-10 and 2026-06-07 in which no API change was published.
+  - >-
+    No entry is marked breaking; the only backward-compatibility event published
+    is the 2026-06-30 field deprecation, which carries no sunset date.

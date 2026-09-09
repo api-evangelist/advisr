@@ -1,0 +1,259 @@
+generated: '2026-09-09'
+method: derived
+status: candidate
+source: >-
+  DERIVED. Advisr ships no MCP server. Searched the API reference, advisr.com,
+  the advisr-io GitHub organisation and the npm registry, and probed
+  https://api.advisr.com/mcp and https://api.advisr.com/v1/mcp with a
+  tools/list JSON-RPC POST (both HTTP 404); mcp.advisr.com does not resolve in
+  DNS. The tool list below is a CANDIDATE we derived from the operations Advisr
+  documents at https://apidocs.advisr.com/ — it is a proposal for what an Advisr
+  MCP server could expose, not a description of anything that exists.
+description: >-
+  Candidate MCP tool surface for the Advisr API. Advisr's API is almost entirely
+  read-only over a well-shaped domain graph (campaigns, clients, agencies,
+  products, users, goals), which is a good fit for an agent tool surface: an
+  agent could answer "what campaigns are open for this advertiser and what did
+  we recommend" without any write risk. The four mutating operations are
+  segregated below and marked destructive.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: api-key
+  verified: probed
+  note: >-
+    mode: none — nobody ships an Advisr MCP server, hosted or stdio. `auth`
+    records what such a server would need (the company-scoped `token` header),
+    not an auth flow that exists today.
+probes:
+  - url: https://api.advisr.com/mcp
+    method: 'POST tools/list'
+    status: 404
+  - url: https://api.advisr.com/v1/mcp
+    method: 'POST tools/list'
+    status: 404
+  - url: https://mcp.advisr.com/mcp
+    method: 'POST tools/list'
+    status: 0
+    note: DNS does not resolve.
+backing_contract:
+  openapi: null
+  note: >-
+    No OpenAPI exists, so each candidate tool's inputSchema below is described
+    from the documented query/URL parameters rather than generated. A real
+    server would need a spec first.
+candidate_tools:
+  - name: get_company
+    rest: GET /v1/company
+    description: Load the company the API token belongs to.
+    inputs: []
+    destructive: false
+  - name: list_groups
+    rest: GET /v1/groups
+    description: List the company's groups (station/region/office units).
+    inputs: [limit, page, sort, sortDesc, search]
+    destructive: false
+  - name: get_group
+    rest: GET /v1/group/:id
+    inputs: [id]
+    destructive: false
+  - name: list_clients
+    rest: GET /v1/clients
+    description: List advertisers.
+    inputs: [limit, page, sort, sortDesc, search]
+    destructive: false
+  - name: get_client
+    rest: GET /v1/client/:id
+    inputs: [id]
+    destructive: false
+  - name: list_client_campaigns
+    rest: GET /v1/client/:id/campaigns
+    inputs: [id, limit, page, sort, sortDesc]
+    destructive: false
+  - name: list_client_goals
+    rest: GET /v1/client/:id/goals
+    inputs: [id]
+    destructive: false
+  - name: list_agencies
+    rest: GET /v1/agency/list
+    inputs: [limit, page, sort, sortDesc, search]
+    destructive: false
+  - name: get_agency
+    rest: GET /v1/agency/:id
+    inputs: [id]
+    destructive: false
+  - name: list_campaigns
+    rest: GET /v1/campaigns
+    inputs: [limit, page, sort, sortDesc, search]
+    destructive: false
+  - name: list_campaigns_by_crm_opportunity
+    rest: GET /v1/external-crm/linked-campaigns/:externalCrmId/:opportunityId
+    description: Find Advisr campaigns linked to an external CRM opportunity.
+    inputs: [externalCrmId, opportunityId, limit, page, sort, sortDesc]
+    destructive: false
+  - name: get_campaign
+    rest: GET /v1/campaign/:id
+    inputs: [id]
+    destructive: false
+  - name: get_campaign_product_summary
+    rest: GET /v1/campaign/:id/product-summary
+    inputs: [id]
+    destructive: false
+  - name: get_campaign_product_detail
+    rest: GET /v1/campaign/:id/product-detail
+    inputs: [id]
+    destructive: false
+  - name: get_campaign_product_recommendation
+    rest: GET /v1/campaign/:id/product-recommendation
+    description: Recommended products and budget values for a campaign.
+    inputs: [id]
+    destructive: false
+  - name: get_campaign_geo
+    rest: GET /v1/campaign/:id/geo
+    inputs: [id]
+    destructive: false
+  - name: get_campaign_audience
+    rest: GET /v1/campaign/:id/audience
+    inputs: [id]
+    destructive: false
+  - name: get_campaign_presentation
+    rest: GET /v1/campaign/:id/presentation/:format
+    description: >-
+      Binary pdf or pptx of a campaign presentation. Returns 202 while the
+      export is pending and 400 if no presentation exists — the presentation
+      must first be created in the Advisr UI.
+    inputs: [id, format]
+    destructive: false
+  - name: list_campaign_files
+    rest: GET /v1/campaign/:id/files
+    inputs: [id]
+    destructive: false
+  - name: get_campaign_export
+    rest: GET /v1/campaign/:id/export/:export_type
+    inputs: [id, export_type]
+    destructive: false
+  - name: list_campaign_support_submissions
+    rest: GET /v1/campaign/:id/support-submissions
+    inputs: [id]
+    destructive: false
+  - name: list_campaign_fulfillment_submissions
+    rest: GET /v1/campaign/:id/fulfillment-submissions
+    inputs: [id]
+    destructive: false
+  - name: list_products
+    rest: GET /v1/products
+    inputs: [limit, page, sort, sortDesc, search]
+    destructive: false
+  - name: list_products_with_subproducts
+    rest: GET /v1/products-with-subproducts
+    inputs: [limit, page, sort, sortDesc, search]
+    destructive: false
+  - name: get_product
+    rest: GET /v1/product/:id
+    inputs: [id]
+    destructive: false
+  - name: list_users
+    rest: GET /v1/users
+    inputs: [limit, page, sort, sortDesc, search]
+    destructive: false
+  - name: get_user
+    rest: GET /v1/user/:id
+    inputs: [id]
+    destructive: false
+  - name: get_user_detail
+    rest: GET /v1/user/:id/detail
+    description: A user plus the permissionGroups on each company-group membership.
+    inputs: [id]
+    destructive: false
+  - name: get_user_by_email
+    rest: GET /v1/user-by-email
+    inputs: [email]
+    destructive: false
+  - name: list_industries
+    rest: GET /v1/industries
+    inputs: []
+    destructive: false
+  - name: get_industry
+    rest: GET /v1/industry/:id
+    inputs: [id]
+    destructive: false
+  - name: list_industry_categories
+    rest: GET /v1/industry-categories
+    inputs: []
+    destructive: false
+  - name: get_industry_category
+    rest: GET /v1/industry-category/:id
+    inputs: [id]
+    destructive: false
+  - name: list_industry_category_goals
+    rest: GET /v1/industry-category/:id/goals
+    inputs: [id]
+    destructive: false
+  - name: list_goals
+    rest: GET /v1/goals
+    inputs: []
+    destructive: false
+  - name: get_file
+    rest: GET /v1/file/:id
+    inputs: [id]
+    destructive: false
+  - name: request_client_export
+    rest: POST /v1/export/request/client
+    description: Enqueue an asynchronous CSV export of clients.
+    inputs: [interval, intervalStart, intervalEnd, filters, columns, header, format]
+    destructive: false
+    side_effect: creates an export job; no cancel operation exists
+  - name: request_campaign_export
+    rest: POST /v1/export/request/campaign
+    inputs: [interval, intervalStart, intervalEnd, filters, columns, header, format]
+    destructive: false
+    side_effect: creates an export job; no cancel operation exists
+  - name: request_campaign_products_export
+    rest: POST /v1/export/request/campaign-products
+    inputs: [interval, intervalStart, intervalEnd, filters, columns, header, format]
+    destructive: false
+    side_effect: creates an export job; no cancel operation exists
+  - name: get_export_status
+    rest: GET /v1/export/status/:exportId
+    inputs: [exportId]
+    destructive: false
+  - name: download_export
+    rest: GET /v1/export/download/:exportId
+    inputs: [exportId]
+    destructive: false
+  - name: get_custom_fields
+    rest: GET /v1/custom-fields/:objectType/:id
+    inputs: [objectType, id]
+    destructive: false
+  - name: update_custom_fields
+    rest: POST /v1/custom-fields/:objectType/:objectId/update
+    description: >-
+      Replace the supplied categoryKey/key custom-field values on an object.
+    inputs: [objectType, objectId, categoryKey, key, value]
+    destructive: true
+    reversal: none documented — see conventions/advisr-conventions.yml reversibility
+  - name: delete_custom_fields
+    rest: POST /v1/custom-fields/:objectType/:objectId/delete
+    inputs: [objectType, objectId, categoryKey, key]
+    destructive: true
+    reversal: none documented
+  - name: delete_all_custom_fields
+    rest: POST /v1/custom-fields/:objectType/:objectId/delete-all
+    inputs: [objectType, objectId]
+    destructive: true
+    reversal: none documented
+coverage:
+  candidate_tool_count: 45
+  documented_operations: 47
+  not_covered:
+    - GET /v1/campaign/:id/geo (Beta) — documented as a second, beta variant of the same path.
+agent_safety_notes:
+  - >-
+    43 of 45 candidate tools are read-only. The three custom-field writes are
+    destructive and irreversible; a server should gate them behind explicit
+    confirmation and snapshot the object's customFields first.
+  - >-
+    Auth is a single company-scoped token with no scopes, so a server cannot
+    issue a read-only credential — an agent given the token can write.

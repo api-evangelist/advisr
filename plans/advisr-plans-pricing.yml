@@ -1,0 +1,38 @@
+generated: '2026-09-09'
+method: searched
+source: >-
+  https://www.advisr.com/ — the full primary and footer navigation was walked on
+  2026-09-09 and carries no pricing page; https://www.advisr.com/pricing returns
+  HTTP 404. The commercial motion is "Schedule a consultation" /
+  https://www.advisr.com/contact-us.
+description: >-
+  Advisr publishes no plans, tiers, list prices or usage quotas. It sells as an
+  enterprise SaaS engagement to broadcast, publishing and agency sales
+  organisations, with the API included in the platform relationship rather than
+  metered or sold separately. API access itself is gated behind an account
+  manager conversation.
+plan_count: 0
+plans: []
+pricing_model: contact-sales
+currency: null
+free_tier: false
+trial: not published
+api_metering:
+  metered: false
+  note: >-
+    No per-call price, credit, quota or overage is published for the API. The
+    reference states "Please reach out to your account manager to inquire about
+    access", so API entitlement is an account-level grant, not a purchasable
+    plan.
+evidence:
+  - url: https://www.advisr.com/pricing
+    status: 404
+  - url: https://www.advisr.com/
+    status: 200
+    note: No pricing link in navigation or footer.
+  - url: https://www.advisr.com/contact-us
+    status: 200
+    note: Consultation request form — the published route to commercial terms.
+  - url: https://apidocs.advisr.com/#introduction
+    status: 200
+    note: '"Please reach out to your account manager to inquire about access."'

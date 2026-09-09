@@ -1,0 +1,223 @@
+generated: '2026-09-09'
+method: derived
+source: >-
+  Derived from the object property tables published in the Advisr API reference
+  at https://apidocs.advisr.com/ — there is no OpenAPI or JSON Schema to derive
+  from, so the entity graph is read from the documented response shapes and the
+  id-reference fields they carry.
+description: >-
+  The Advisr Platform entity graph as the public API exposes it. Advisr is a
+  single-tenant-per-company model: every token is company-scoped, so `Company`
+  is the implicit root of every other object. Identifiers are integers (no typed
+  id prefixes); `externalLookupId` and the customField `sfdc`/`google` category
+  keys are the documented bridges into external CRMs.
+identifier_scheme:
+  primary_key: integer `id`, unique within an object type
+  prefixed_ids: false
+  opaque_ids:
+    - object: Company
+      field: hashId
+      note: A string hash alongside the integer id on the company object.
+    - object: Export
+      field: exportId
+      note: Opaque 32-character hex job id returned by the export request endpoints.
+  external_ids:
+    - field: externalLookupId
+      on: [Campaign, Client]
+      description: External system ID used for matching across platforms.
+    - field: externalCrmLinks
+      on: [Campaign]
+      description: >-
+        Array carrying crmType, crmId, crmName, link, status, dates, budget and
+        owner — the documented CRM join. Addressable via GET
+        /v1/external-crm/linked-campaigns/:externalCrmId/:opportunityId.
+    - field: customFields
+      on: [Company, Group, Client, Campaign, Product, IndustryCategory, UserCompanyGroup]
+      description: >-
+        Typed key/value pairs namespaced by categoryKey (documented examples:
+        `sfdc`, `google`) — the read/write extension point and the only
+        writable surface in the API.
+entities:
+  - name: Company
+    endpoint: GET /v1/company
+    description: The tenant. Every token resolves to exactly one company.
+    key_fields: [id, hashId, name, logo, supportEmails, presetBudgets, billingDetailId, termsAndConditions, brandColors, campaignBudgetMinimum, customFields]
+    relationships:
+      - has_many: Group
+        via: Group.companyId
+      - has_many: Client
+        via: Client.companyId
+      - has_many: Campaign
+        via: Campaign.companyId
+      - has_many: User
+        via: UserCompanyGroup.companyId
+  - name: Group
+    endpoint: GET /v1/groups, GET /v1/group/:id
+    description: A company group — the station/region/office unit sales is organised by.
+    key_fields: [id, name, companyId, companyName, region, station]
+    relationships:
+      - belongs_to: Company
+        via: companyId
+      - has_many: Client
+        via: Client.companyGroupId
+      - has_many: Campaign
+        via: Campaign.companyGroupId
+  - name: Client
+    endpoint: GET /v1/clients, GET /v1/client/:id
+    description: The advertiser being sold to.
+    key_fields: [id, name, companyId, companyGroupId, deleted, externalLookupId, primaryContactName, primaryContactEmail, primaryContactPhone, logoUrl, website, facebook, twitter, hasAgency, agencies, industryId, industryCategoryId, type]
+    relationships:
+      - belongs_to: Company
+        via: companyId
+      - belongs_to: Group
+        via: companyGroupId
+      - belongs_to: IndustryCategory
+        via: industryCategoryId
+      - belongs_to: Industry
+        via: industryId
+      - has_many: Agency
+        via: agencies[] (set via agencyIds)
+      - has_many: Campaign
+        via: GET /v1/client/:id/campaigns
+      - has_many: Goal
+        via: GET /v1/client/:id/goals
+      - has_many: User
+        via: teamMembers
+  - name: Agency
+    endpoint: GET /v1/agency/list, GET /v1/agency/:id
+    description: >-
+      The media agency representing a client. Added 2026-06-30; supersedes the
+      deprecated flat agencyName/agencyContact fields on Client.
+    key_fields: [id, name, isActive, commissionFeePercentage]
+    relationships:
+      - has_many: Client
+        via: Client.agencies[]
+  - name: Campaign
+    endpoint: GET /v1/campaigns, GET /v1/campaign/:id
+    description: >-
+      The proposal / media plan. The central object of the API — twelve of the
+      documented read endpoints hang off it.
+    key_fields: [id, dealId, name, versionType, creationFlow, state, status, statusKey, submittedStatus, startDate, endDate, budget, hardCost, commissionFee, campaignType, clientId, companyGroupId, companyId, industryId, industryCategoryId, primaryGoalId, secondaryGoalId, owner, createdBy, submittedBy, teamMembers, addresses, externalLookupId, externalCrmLinks, isTestCampaign, readyToSubmit, submittedAt, completedAt, customFields]
+    relationships:
+      - belongs_to: Client
+        via: clientId
+      - belongs_to: Group
+        via: companyGroupId
+      - belongs_to: Company
+        via: companyId
+      - belongs_to: IndustryCategory
+        via: industryCategoryId
+      - belongs_to: Goal
+        via: primaryGoalId
+      - belongs_to: Goal
+        via: secondaryGoalId
+      - belongs_to: User
+        via: owner / createdBy / submittedBy
+      - has_many: CampaignProduct
+        via: GET /v1/campaign/:id/product-summary and /product-detail
+      - has_many: File
+        via: GET /v1/campaign/:id/files
+      - has_one: CampaignGeo
+        via: GET /v1/campaign/:id/geo
+      - has_one: CampaignAudience
+        via: GET /v1/campaign/:id/audience
+      - has_one: Presentation
+        via: GET /v1/campaign/:id/presentation/:format
+      - has_many: Submission
+        via: GET /v1/campaign/:id/support-submissions and /fulfillment-submissions
+  - name: Product
+    endpoint: GET /v1/products, GET /v1/products-with-subproducts, GET /v1/product/:id
+    description: The sellable inventory or service, optionally with sub-products.
+    key_fields: [id, name, customFields]
+    relationships:
+      - has_many: Product
+        via: subProducts (self-referencing parent/child)
+      - has_many: CampaignProduct
+        via: campaign product summary/detail
+  - name: CampaignProduct
+    endpoint: GET /v1/campaign/:id/product-summary, /product-detail, /product-recommendation
+    description: >-
+      A product line on a campaign, with budget, flight and — on the
+      recommendation endpoint — recommended budget values.
+    relationships:
+      - belongs_to: Campaign
+      - belongs_to: Product
+  - name: User
+    endpoint: GET /v1/users, GET /v1/user/:id, GET /v1/user/:id/detail, GET /v1/user-by-email
+    description: A seller or administrator.
+    key_fields: [id, firstName, lastName, fullName, email, avatar, mobilePhone, officePhone, isActive, isAdvisrEmployee, userCompanyGroups]
+    relationships:
+      - has_many: UserCompanyGroup
+        via: userCompanyGroups
+      - has_many: Campaign
+        via: Campaign.owner
+  - name: UserCompanyGroup
+    description: >-
+      The membership join between a User and a Group inside a Company; carries
+      title, isCampaignOwner, isActive and (on /detail) permissionGroups.
+    relationships:
+      - belongs_to: User
+        via: userId
+      - belongs_to: Group
+        via: companyGroupId
+      - belongs_to: Company
+        via: companyId
+      - has_many: PermissionGroup
+        via: permissionGroups (GET /v1/user/:id/detail only)
+  - name: PermissionGroup
+    description: Named permission set attached to a user's company-group membership.
+    key_fields: [id, name]
+  - name: Industry
+    endpoint: GET /v1/industries, GET /v1/industry/:id
+    relationships:
+      - has_many: IndustryCategory
+  - name: IndustryCategory
+    endpoint: GET /v1/industry-categories, GET /v1/industry-category/:id
+    relationships:
+      - belongs_to: Industry
+        via: industryId
+      - has_many: Goal
+        via: GET /v1/industry-category/:id/goals
+      - has_many: Client
+      - has_many: Campaign
+  - name: Goal
+    endpoint: GET /v1/goals, GET /v1/client/:id/goals, GET /v1/industry-category/:id/goals
+    description: The advertiser objective a campaign is planned against.
+    relationships:
+      - belongs_to: IndustryCategory
+      - has_many: Campaign
+        via: Campaign.primaryGoalId / secondaryGoalId
+  - name: File
+    endpoint: GET /v1/campaign/:id/files, GET /v1/file/:id
+    relationships:
+      - belongs_to: Campaign
+  - name: Export
+    endpoint: >-
+      POST /v1/export/request/{client|campaign|campaign-products},
+      GET /v1/export/status/:exportId, GET /v1/export/download/:exportId
+    description: >-
+      An asynchronous CSV extract job. Request returns {status, exportId};
+      status returns {status, createdAt, hasMore, rowCount, url}.
+    key_fields: [exportId, status, createdAt, hasMore, rowCount, url]
+  - name: CustomField
+    endpoint: >-
+      GET /v1/custom-fields/:objectType/:id,
+      POST /v1/custom-fields/:objectType/:objectId/{update|delete|delete-all}
+    description: >-
+      Typed, category-namespaced extension values. objectType is one of
+      product, client, campaign, industryCategory, company, group,
+      userCompanyGroup.
+    key_fields: [categoryKey, key, name, type, isArray, value, valueOptions, updatedAt]
+    types: [text, multiselect, number, datetime, boolean, array]
+notes:
+  - >-
+    The graph is denormalised in responses: nearly every foreign key is
+    accompanied by its display name (companyId/companyName,
+    industryCategoryId/industryCategoryName), so a client can render without a
+    second call. There is no `expand` parameter because expansion is the default.
+  - >-
+    Campaign is the hub. Everything an integrator wants — products, geo,
+    audience, files, presentation, submissions, export — is reached through it.
+  - >-
+    The API is read-only apart from custom fields and export requests. There is
+    no way to create a client, campaign or product through the API.

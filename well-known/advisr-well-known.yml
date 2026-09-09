@@ -1,0 +1,113 @@
+generated: '2026-09-09'
+method: probed
+source: Direct HTTP probes of the named /.well-known/ paths on every host in this record,
+  2026-09-09.
+description: 'Results of probing the /.well-known/ discovery surface on every host the record
+  knows: the API host (api.advisr.com), the registrable domain and www (advisr.com, www.advisr.com),
+  the API reference host (apidocs.advisr.com) and the application/console host (app.advisr.com).
+  NOTHING WAS FOUND. Every path 404s on the four real hosts. app.advisr.com answers HTTP 200
+  with the same 1,372-byte single-page-app HTML shell for every path — including paths that
+  cannot exist — so those 200s are catch-all responses, not documents, and are recorded as
+  misses. No security.txt, no OpenID/OAuth metadata, no api-catalog, no ai-plugin, and no
+  A2A agent card is served. No WellKnown, SecurityTxt or AgentCard pointer is emitted from
+  this file: it documents an absence.'
+result: none
+hosts:
+- host: https://api.advisr.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://www.advisr.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://advisr.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://apidocs.advisr.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://app.advisr.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    note: HTTP 200 returned an HTML SPA shell, not a document — treated as a miss.
+  - path: /.well-known/openid-configuration
+    status: 200
+    note: HTTP 200 returned an HTML SPA shell, not a document — treated as a miss.
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    note: HTTP 200 returned an HTML SPA shell, not a document — treated as a miss.
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    note: HTTP 200 returned an HTML SPA shell, not a document — treated as a miss.
+  - path: /.well-known/api-catalog
+    status: 200
+    note: HTTP 200 returned an HTML SPA shell, not a document — treated as a miss.
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    note: HTTP 200 returned an HTML SPA shell, not a document — treated as a miss.
+  - path: /.well-known/agent-card.json
+    status: 200
+    note: HTTP 200 returned an HTML SPA shell, not a document — treated as a miss.
+  - path: /.well-known/agent.json
+    status: 200
+    note: HTTP 200 returned an HTML SPA shell, not a document — treated as a miss.

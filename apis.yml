@@ -1,23 +1,111 @@
 aid: advisr
 name: Advisr
-description: 'Advisr is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Advisr is a New York-based sales operating system built for the media and
+  advertising industry. Its platform helps broadcast, publishing, cable and
+  agency sales teams plan campaigns, match products to advertiser goals and
+  budgets, dynamically generate client-ready proposals and presentations,
+  automate collaboration and approval workflows, and forecast revenue from
+  real-time dashboards. Advisr publishes a public, read-oriented REST API at
+  https://api.advisr.com/v1 covering companies, groups, clients, agencies,
+  campaigns, products, users, industries and categories, goals, files, bulk
+  exports and custom fields, documented as a static HTML reference at
+  https://apidocs.advisr.com. Access tokens are issued by Advisr support rather
+  than self-service.
+image: https://cdn.prod.website-files.com/63e3bd34df9e1947a4fd9a7a/63e99a7ce0068292ab161dba_advisr-icon.png
 url: https://raw.githubusercontent.com/api-evangelist/advisr/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-09-09'
 modified: '2026-09-09'
 tags:
 - Company
-apis: []
+- Advertising
+- Media
+- Sales
+- Sales Enablement
+- Media Planning
+- Proposals
+- Advertising Sales
+- Campaigns
+- CRM
+position: Producing
+apis:
+- aid: advisr:advisr-api
+  name: Advisr API
+  image: https://cdn.prod.website-files.com/63e3bd34df9e1947a4fd9a7a/63e99a7ce0068292ab161dba_advisr-icon.png
+  description: >-
+    The Advisr REST API exposes the objects inside the Advisr Platform —
+    company, groups, clients, agencies, campaigns (including product summary
+    and detail, product recommendations, geo, audience, presentation, files,
+    exports and support/fulfillment submissions), products and sub-products,
+    users, industries and industry categories, goals, files, asynchronous bulk
+    exports, and read/write custom fields. All responses are JSON. Requests are
+    authenticated with a company-scoped access token sent in a `token` request
+    header; tokens are issued by an Advisr support representative rather than
+    through self-service signup.
+  humanURL: https://apidocs.advisr.com/
+  baseURL: https://api.advisr.com/v1
+  tags:
+  - Advertising
+  - Media
+  - Sales
+  - Campaigns
+  - Proposals
+  properties:
+  - type: Documentation
+    url: https://apidocs.advisr.com/
+  - type: APIReference
+    url: https://apidocs.advisr.com/
+  - type: Authentication
+    url: authentication/advisr-authentication.yml
+  - type: ErrorCatalog
+    url: errors/advisr-error-codes.yml
+  - type: Conventions
+    url: conventions/advisr-conventions.yml
+  - type: DataModel
+    url: data-model/advisr-data-model.yml
+  - type: Conformance
+    url: conformance/advisr-conformance.yml
+  - type: RateLimits
+    url: rate-limits/advisr-rate-limits.yml
+  - type: ChangeLog
+    url: changelog/advisr-changelog.yml
+  - type: Lifecycle
+    url: lifecycle/advisr-lifecycle.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/advisr-domain-security.yml
 - type: Website
-  url: https://www.nasdaqprivatemarket.com/
+  url: https://www.advisr.com/
+- type: Blog
+  url: https://www.advisr.com/resources
+- type: Support
+  url: https://support.advisr.com/hc/en-us
+- type: TermsOfService
+  url: https://www.advisr.com/terms-of-service
+- type: PrivacyPolicy
+  url: https://www.advisr.com/privacy-policy
+- type: Login
+  url: https://app.advisr.com
+- type: GitHubOrganization
+  url: https://github.com/advisr-io
+- type: Packages
+  url: packages/advisr-packages.yml
+- type: Plans
+  url: plans/advisr-plans-pricing.yml
+- type: LLMsTxt
+  url: llms/advisr-llms.txt
+- type: X-MCPServerCandidate
+  url: mcp/advisr-mcp.yml
+x-enrichment:
+  date: '2026-09-09'
+  status: enriched
+  artifacts_added: 14
+  pass: local-v3

@@ -1,0 +1,80 @@
+generated: '2026-09-09'
+method: searched
+source: https://apidocs.advisr.com/#errors
+description: >-
+  Advisr's published error registry, read verbatim from the "Errors" and
+  "Custom field errors" sections of the public API reference. Advisr does NOT
+  use RFC 9457 problem+json — it returns a proprietary envelope with a typed
+  error name and an array of human-readable messages.
+format: proprietary
+media_type: application/json
+envelope:
+  shape: |
+    {
+      "error": {
+        "type": "AdvisrInvalidRequestError",
+        "messages": ["This is an API error"]
+      }
+    }
+  fields:
+    error.type: string — the Advisr error type name (see error_types below)
+    error.messages: array of strings — one or more human-readable messages
+  note: >-
+    The HTTP status code carries the class of failure; `error.type` names it.
+    There is no machine-readable per-failure code, no `instance`/correlation
+    identifier, and no documented `retry-after` or remediation field.
+error_types:
+  - type: AdvisrInvalidRequestError
+    status: 400
+    title: Invalid request
+    description: Parameters with request are not valid.
+  - type: AdvisrValidationError
+    status: 400
+    title: Validation error
+    description: The request included invalid data or was made in an invalid way.
+  - type: AdvisrUnauthorizedError
+    status: 401
+    title: Unauthorized
+    description: Invalid or no API key provided for this request.
+    remediation: Send a valid company access token in the `token` header.
+  - type: AdvisrPermissionError
+    status: 403
+    title: Permission denied
+    description: The API key used for this request does not have the necessary permissions.
+    remediation: Ask your Advisr support representative to widen the token's permissions.
+  - type: AdvisrRateLimitError
+    status: 429
+    title: Rate limit exceeded
+    description: You have exceeded your established rate limit.
+    remediation: >-
+      Back off and retry. Advisr publishes no limit value, window, or
+      rate-limit response headers — see rate-limits/advisr-rate-limits.yml.
+  - type: AdvisrAPIError
+    status: 500
+    title: Server error
+    description: Something went wrong on Advisr's end.
+custom_field_errors:
+  status: 400
+  envelope: same `error.type` / `error.messages` envelope
+  source: https://apidocs.advisr.com/#custom-field-errors
+  messages:
+    - message: categoryKey/key not found
+      meaning: categoryKey/key is not found on this object.
+    - message: expecting an array
+      meaning: The field has isArray true and a single value was passed.
+    - message: expecting a single value
+      meaning: The field has isArray false and an array of values was passed.
+    - message: expecting an integer
+      meaning: The field type is a string and an integer was passed.
+    - message: expecting a string
+      meaning: The field type is an int and a string was passed.
+gaps:
+  - Not RFC 9457 (`application/problem+json`); no `type` URI, `title`, `detail`, `instance`.
+  - No stable machine-readable error code per failure — only six broad type names.
+  - No documented request/correlation id returned on failure for support escalation.
+  - >-
+    404 is returned in practice by api.advisr.com but is absent from the
+    published table, and it uses a DIFFERENT envelope than the documented one:
+    an unauthenticated GET https://api.advisr.com/ returned HTTP 404 with
+    `{"error":true,"message":"Not Found"}` (probed 2026-09-09). Two error
+    envelopes on one API is an integration hazard.

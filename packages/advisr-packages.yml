@@ -1,0 +1,151 @@
+generated: '2026-09-09'
+method: searched
+source: >-
+  https://registry.npmjs.org/-/v1/search?text=advisr (npm), PyPI, RubyGems,
+  crates.io, Packagist and https://github.com/advisr-io — searched 2026-09-09.
+description: >-
+  FINDING: Advisr publishes NO client SDK for its API, in any language. There is
+  no SDK section in the API reference, no client library in the advisr-io GitHub
+  organisation (17 public repos, none an API client), and nothing on PyPI,
+  RubyGems, crates.io, Packagist, Maven Central or NuGet. The nine packages
+  under the `@advisr` npm scope listed below ARE first-party — Advisr published
+  them — but every one is an internal fork of a third-party library
+  (PPTX/Excel generation, Vue map and icon components, a Passport OAuth
+  strategy). None of them wraps, calls or documents the Advisr API, so this file
+  records them as first-party packages and NOT as SDKs, and no `SDKs` pointer is
+  emitted for this provider.
+sdk_count: 0
+official_sdk: false
+registries_checked:
+  - registry: npm
+    result: 9 packages under the @advisr scope; none is an API client.
+  - registry: pypi
+    result: no advisr / advisr-api / advisr-sdk package (HTTP 404).
+  - registry: rubygems
+    result: no advisr gem (HTTP 404).
+  - registry: packagist
+    result: no advisr/advisr package (HTTP 404).
+  - registry: crates.io
+    result: crates.io returned HTTP 403 to the automated probe; no Rust client is referenced anywhere in Advisr's docs or GitHub org.
+  - registry: github
+    result: >-
+      https://github.com/advisr-io — 17 public repositories, 13 of them forks of
+      third-party libraries. No SDK, no OpenAPI, no API client.
+packages:
+  - language: javascript
+    registry: npm
+    name: "@advisr/v-mapbox"
+    url: https://www.npmjs.com/package/@advisr/v-mapbox
+    source: https://github.com/advisr-io/v-mapbox
+    install: npm install @advisr/v-mapbox
+    official: true
+    sdk: false
+    version: 5.1.3
+    published: '2025-07-17'
+    note: Fork of v-mapbox (Maplibre/Mapbox for Vue). Internal UI dependency, not an Advisr API client.
+  - language: javascript
+    registry: npm
+    name: "@advisr/vue-draggable-resizable"
+    url: https://www.npmjs.com/package/@advisr/vue-draggable-resizable
+    source: https://github.com/advisr-io/vue-draggable-resizable
+    install: npm install @advisr/vue-draggable-resizable
+    official: true
+    sdk: false
+    version: 3.0.1
+    published: '2025-07-18'
+    note: Fork of vue-draggable-resizable. Internal UI dependency, not an Advisr API client.
+  - language: javascript
+    registry: npm
+    name: "@advisr/passport-slack-oauth2"
+    url: https://www.npmjs.com/package/@advisr/passport-slack-oauth2
+    source: https://github.com/advisr-io/passport-slack-oauth2
+    install: npm install @advisr/passport-slack-oauth2
+    official: true
+    sdk: false
+    version: 1.2.1
+    published: '2024-12-05'
+    note: Fork of a Passport Slack OAuth 2.0 strategy. Internal auth dependency, not an Advisr API client.
+  - language: javascript
+    registry: npm
+    name: "@advisr/pptx-compose-2"
+    url: https://www.npmjs.com/package/@advisr/pptx-compose-2
+    source: https://github.com/advisr-io/pptx-compose
+    install: npm install @advisr/pptx-compose-2
+    official: true
+    sdk: false
+    version: 1.0.3
+    published: '2023-05-15'
+    note: >-
+      Fork of pptx-compose (PPTX to JSON). Supports the platform's presentation
+      generation, which the API exposes read-only at
+      GET /v1/campaign/:id/presentation/:format. Not an API client.
+  - language: javascript
+    registry: npm
+    name: "@advisr/video-thumbnail-generator"
+    url: https://www.npmjs.com/package/@advisr/video-thumbnail-generator
+    source: https://github.com/advisr-io/video-thumbnail-generator
+    install: npm install @advisr/video-thumbnail-generator
+    official: true
+    sdk: false
+    version: 1.1.4
+    published: '2023-05-01'
+    note: Fork of a node video-thumbnail module. Internal media dependency, not an Advisr API client.
+  - language: javascript
+    registry: npm
+    name: "@advisr/excel4node"
+    url: https://www.npmjs.com/package/@advisr/excel4node
+    source: https://github.com/advisr-io/excel4node
+    install: npm install @advisr/excel4node
+    official: true
+    sdk: false
+    version: 1.8.1
+    published: '2022-07-21'
+    note: >-
+      Fork of excel4node. Supports spreadsheet export, which the API exposes as
+      the asynchronous CSV export surface. Not an API client.
+  - language: javascript
+    registry: npm
+    name: "@advisr/tinycolor2"
+    url: https://www.npmjs.com/package/@advisr/tinycolor2
+    source: https://github.com/advisr-io/TinyColor
+    install: npm install @advisr/tinycolor2
+    official: true
+    sdk: false
+    version: 1.4.3
+    published: '2022-07-18'
+    note: Fork of tinycolor2. Internal UI dependency, not an Advisr API client.
+  - language: javascript
+    registry: npm
+    name: "@advisr/vue-ionicons"
+    url: https://www.npmjs.com/package/@advisr/vue-ionicons
+    source: https://github.com/mazipan/vue-ionicons
+    install: npm install @advisr/vue-ionicons
+    official: true
+    sdk: false
+    version: 3.0.6
+    published: '2022-07-18'
+    note: Fork of vue-ionicons. Internal UI dependency, not an Advisr API client.
+  - language: javascript
+    registry: npm
+    name: "@advisr/pptx-compose"
+    url: https://www.npmjs.com/package/@advisr/pptx-compose
+    source: https://github.com/advisr-io/pptx-compose
+    install: npm install @advisr/pptx-compose
+    official: true
+    sdk: false
+    version: 1.0.1
+    published: '2022-03-22'
+    note: Superseded by @advisr/pptx-compose-2. Internal dependency, not an Advisr API client.
+observations:
+  - >-
+    Every @advisr npm package is a fork of an upstream open-source library. The
+    scope exists to pin internal build dependencies, not to distribute an SDK.
+  - >-
+    Seven of the nine were last published in 2022–2023; the most recent release
+    across the whole scope is 2025-07-18. None tracks the API, so package
+    currency is not an API-decay signal here.
+recommendation_to_provider: >-
+  Publish an OpenAPI for https://api.advisr.com/v1 and generate a JavaScript and
+  a Python client from it. The reference is complete enough to generate one
+  today; the absence of any client library is the single largest integration
+  cost Advisr currently passes to its customers and fulfillment partners.

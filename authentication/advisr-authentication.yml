@@ -1,0 +1,53 @@
+generated: '2026-09-09'
+method: searched
+source: https://apidocs.advisr.com/#authentication
+description: >-
+  Authentication profile for the Advisr REST API, read from the public API
+  reference. Advisr uses a single company-scoped API token supplied in a custom
+  `token` request header. There is no OAuth 2.0, OpenID Connect, mTLS or HTTP
+  Basic surface, and no self-service key issuance — tokens are provisioned by an
+  Advisr support representative for the customer company.
+base_url: https://api.advisr.com/v1
+schemes:
+  - id: company_token
+    type: apiKey
+    in: header
+    name: token
+    description: >-
+      Company access token. Sent verbatim as the `token` header on every
+      request — there is no `Bearer` or other scheme prefix.
+    example_shape: 'token: api-token'
+    applies_to: All Advisr API endpoints.
+    docs: https://apidocs.advisr.com/#authentication
+scope_model:
+  type: none
+  detail: >-
+    The token is scoped to a company; the API publishes no OAuth scopes,
+    permissions matrix or per-endpoint grant list. A 403 AdvisrPermissionError
+    is documented for a token that lacks the necessary permissions, so
+    server-side permissioning exists but is not documented as an addressable
+    scope surface.
+issuance:
+  self_service: false
+  how: >-
+    "In order to retrieve your Company's access token please contact your
+    Support representative." Access to the API itself is also gated —
+    "Please reach out to your account manager to inquire about access."
+  docs: https://apidocs.advisr.com/#introduction
+rotation:
+  documented: false
+  note: No key rotation, expiry or revocation procedure is published.
+transport:
+  tls_required: true
+  note: All documented examples use https://api.advisr.com.
+failure_modes:
+  - status: 401
+    type: AdvisrUnauthorizedError
+    meaning: Invalid or no API key provided for this request.
+  - status: 403
+    type: AdvisrPermissionError
+    meaning: The API key used for this request does not have the necessary permissions.
+gaps:
+  - No OAuth 2.0 / OpenID Connect surface, so no delegated or per-user authorization.
+  - No documented token rotation, expiry, or revocation.
+  - Token issuance is a human support request, not an API or console flow.

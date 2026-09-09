@@ -1,0 +1,36 @@
+generated: '2026-09-09'
+method: searched
+source: https://apidocs.advisr.com/#errors
+description: >-
+  Published rate-limit posture for the Advisr API. Advisr confirms that a rate
+  limit exists and names the error returned when it is exceeded, but publishes
+  no limit value, no window, no scope, and no rate-limit response headers, so a
+  client cannot pace itself and only learns the limit by hitting it.
+limit_count: 0
+limits: []
+exhaustion:
+  status: 429
+  error_type: AdvisrRateLimitError
+  message: You have exceeded your established rate limit.
+  envelope: '{"error": {"type": "AdvisrRateLimitError", "messages": ["..."]}}'
+  retry_after_header: not documented
+response_headers:
+  documented: []
+  note: >-
+    No X-RateLimit-*, RateLimit-* (RFC 9238-style) or Retry-After headers are
+    documented in the API reference. Advisr's own wording — "your established
+    rate limit" — implies the limit is negotiated per company rather than
+    published, which is consistent with token issuance being a support request.
+scope:
+  documented: false
+  likely: per company access token (inferred from "your established rate limit"; not stated)
+gaps:
+  - No published limit value, window, or burst allowance.
+  - No rate-limit response headers, so no runtime signal ahead of the 429.
+  - No Retry-After on exhaustion, so back-off timing is left to the client.
+  - No documented per-endpoint or bulk-export-specific limits.
+recommendation_to_provider: >-
+  Publish the numeric limit and window, and emit RateLimit-Limit /
+  RateLimit-Remaining / RateLimit-Reset (or X-RateLimit-*) plus Retry-After on
+  429. An agent that cannot read its remaining budget must either under-use the
+  API or discover the ceiling by being refused.

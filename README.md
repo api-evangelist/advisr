@@ -64,5 +64,25 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Advisr is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://www.nasdaqprivatemarket.com/
+Advisr is a New York-based sales operating system built for the media and advertising
+industry. Broadcast, publishing, cable and agency sales teams use it to plan campaigns,
+match products to advertiser goals and budgets, dynamically generate client-ready
+proposals and presentations, automate collaboration and approval workflows, and forecast
+revenue from real-time dashboards.
+
+Advisr publishes a public, server-rendered REST API reference at
+[apidocs.advisr.com](https://apidocs.advisr.com/) covering companies, groups, clients,
+agencies, campaigns, products, users, industries and categories, goals, files, bulk CSV
+exports and read/write custom fields — 47 documented operations against
+`https://api.advisr.com/v1`, authenticated with a company-scoped `token` header issued by
+Advisr support. Advisr publishes **no machine-readable contract**: no OpenAPI, GraphQL
+SDL, AsyncAPI, Postman collection, MCP server, agent card or client SDK in any language.
+Everything in this repository under `authentication/`, `conventions/`, `errors/`,
+`data-model/`, `changelog/`, `lifecycle/`, `conformance/`, `rate-limits/`, `plans/`,
+`packages/`, `mcp/`, `well-known/` and `llms/` was read from that public reference or
+probed directly, and each file records its own method and source.
+
+- Website: https://www.advisr.com/
+- API reference: https://apidocs.advisr.com/
+- Help center: https://support.advisr.com/hc/en-us
+- GitHub: https://github.com/advisr-io
