@@ -1,0 +1,16 @@
+generated: '2026-10-12'
+method: none
+source:
+- https://zapier.com/apps/advisr/integrations
+- https://n8n.io/integrations/advisr/
+- https://composio.dev/toolkits/advisr
+- https://monid.ai/tools/advisr
+checked:
+- https://composio.dev/toolkits/advisr
+- https://monid.ai/tools/advisr
+- https://n8n.io/integrations/advisr/
+- https://zapier.com/apps/advisr/integrations
+summary: null
+marketplace_apps: []
+edges: []
+templates: []
