@@ -1,16 +1,98 @@
 generated: '2026-10-12'
-method: none
+method: searched
 source:
 - https://zapier.com/apps/advisr/integrations
 - https://n8n.io/integrations/advisr/
 - https://composio.dev/toolkits/advisr
 - https://monid.ai/tools/advisr
 checked:
+- https://api.nuget.org/v3
 - https://composio.dev/toolkits/advisr
+- https://crates.io/api/v1
 - https://monid.ai/tools/advisr
 - https://n8n.io/integrations/advisr/
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
 - https://zapier.com/apps/advisr/integrations
 summary: null
 marketplace_apps: []
-edges: []
+edges:
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (JavaScript/TypeScript)
+  evidence: https://www.npmjs.com/package/@advisr/excel4node
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: '@advisr/excel4node'
+      version: 1.8.1
+      released: '2025-07-17'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@advisr/excel4node
+      repo_leg: github-org:advisr-io
+      publisher_leg: org:advisr
+      matched_by: github-org
+    - name: '@advisr/passport-slack-oauth2'
+      version: 1.2.1
+      released: '2025-07-17'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@advisr/passport-slack-oauth2
+      repo_leg: github-org:advisr-io
+      publisher_leg: org:advisr
+      matched_by: github-org
+    - name: '@advisr/pptx-compose'
+      version: 1.0.1
+      released: '2025-07-17'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@advisr/pptx-compose
+      repo_leg: github-org:advisr-io
+      publisher_leg: org:advisr
+      matched_by: github-org
+    - name: '@advisr/pptx-compose-2'
+      version: 1.0.3
+      released: '2025-07-17'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@advisr/pptx-compose-2
+      repo_leg: github-org:advisr-io
+      publisher_leg: org:advisr
+      matched_by: github-org
+    - name: '@advisr/video-thumbnail-generator'
+      version: 1.1.4
+      released: '2025-07-17'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@advisr/video-thumbnail-generator
+      repo_leg: github-org:advisr-io
+      publisher_leg: org:advisr
+      matched_by: github-org
+    - name: '@advisr/vue-draggable-resizable'
+      version: 3.0.1
+      released: '2025-07-18'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@advisr/vue-draggable-resizable
+      repo_leg: github-org:advisr-io
+      publisher_leg: org:advisr
+      matched_by: github-org
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
 templates: []
